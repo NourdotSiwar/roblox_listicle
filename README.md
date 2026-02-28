@@ -29,7 +29,8 @@ The following **optional** features are implemented:
 
 Here's a walkthrough of implemented required features:
 
-![Project Demo](https://i.imgur.com/I2HVObQ.gif)
+<img src='Project_Recording.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
 
 GIF created with Snipping Tool.
 
