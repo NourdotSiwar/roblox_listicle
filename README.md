@@ -27,11 +27,11 @@ The following **optional** features are implemented:
 
 ## Video Walkthrough
 
-**Note: please be sure to 
-
 Here's a walkthrough of implemented required features:
 
-GIF created with [SnippingTool](Project_Recording.mp4)
+![Project Demo](https://i.imgur.com/I2HVObQ.gif)
+
+GIF created with Snipping Tool.
 
 ## Notes
 
