@@ -1,32 +1,40 @@
 import express from 'express'
 import path from 'path'
-
 import { fileURLToPath } from 'url'
-
-import gamesData from '../data/games.js'
+import GamesController from '../controllers/games.js'
+import { pool } from '../config/database.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  res.status(200).json(gamesData)
-})
+router.get('/', GamesController.getGames)
 
-router.get('/:gameId', (req, res) => {
-  const id = parseInt(req.params.gameId)
-  const game = gamesData.find(g => g.id === id)
+router.get('/:gameId', async (req, res) => {
 
-  if (!game) {
-    return res.status(404).sendFile(
-      path.join(__dirname, '../public/404.html')
+  try {
+      const id = parseInt(req.params.gameId)
+
+      const result = await pool.query(
+      'SELECT * FROM games WHERE id = $1',
+      [id]
     )
-  }
 
-  res.sendFile(
-    path.join(__dirname, '../public/game.html')
-  )
+      if (result.rows.length === 0) {
+      return res.status(404).sendFile(
+        path.join(__dirname, '../public/404.html')
+      )
+    }
+
+      res.sendFile(
+      path.join(__dirname, '../public/game.html')
+      )
+
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Server error' })
+  }
 })
 
 export default router
