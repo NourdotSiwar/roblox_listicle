@@ -4,7 +4,7 @@ Submitted by: **Nour Siwar**
 
 About this web app: **New Version of Roblox Listicle: Instead of pulling data from a js file, Roblox Listicle pulls game data from a database!**
 
-Time spent: **X** hours
+Time spent: **3** hours
 
 ## Required Features
 
