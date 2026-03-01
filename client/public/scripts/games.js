@@ -1,67 +1,88 @@
-const renderGames = async () => {
+document.addEventListener('DOMContentLoaded', () => {
 
-      const response = await fetch('/games')
-      const data = await response.json()
+  const path = window.location.pathname
+  const lastSegment = path.split('/').pop()
 
-      const mainContent = document.getElementById('main-content')
+  // =========================
+  // RENDER ALL GAMES (HOME)
+  // =========================
+  const renderGames = async (searchTerm = '') => {
+    const response = await fetch(`/games?search=${searchTerm}`)
+    const data = await response.json()
 
-      if (!data || data.length === 0) {
+    const mainContent = document.getElementById('main-content')
+
+    if (!mainContent) return
+
+    mainContent.innerHTML = ''
+
+    if (!data || data.length === 0) {
       mainContent.innerHTML = `<h2>No Games Available 😞</h2>`
       return
-      }
+    }
 
-      data.forEach(game => {
+    data.forEach(game => {
       const card = document.createElement('article')
 
       card.innerHTML = `
-            <img src="${game.image}" alt="${game.gameName}" />
-            <h3>${game.gameName}</h3>
-            <p><strong>Genre:</strong> ${game.genre}</p>
-            <p><strong>Visits:</strong> ${game.visits}</p>
-            <a href="/games/${game.id}" role="button">Read More</a>
+        <img src="${game.image}" alt="${game.gameName}" />
+        <h3>${game.gameName}</h3>
+        <p><strong>Genre:</strong> ${game.genre}</p>
+        <p><strong>Visits:</strong> ${game.visits}</p>
+        <a href="/games/${game.id}" role="button">Read More</a>
       `
+
       mainContent.appendChild(card)
-      })      
-}
+    })
+  }
 
-let requestedUrl = window.location.href.split('/').pop()
+  // =========================
+  // RENDER SINGLE GAME
+  // =========================
+  const renderGame = async () => {
+    const requestedID = parseInt(lastSegment)
 
-const renderGame = async () => {
+    const response = await fetch('/games')
+    const data = await response.json()
 
-      const requestedID = parseInt(window.location.href.split('/').pop())
+    const gameContent = document.getElementById('game-content')
+    if (!gameContent) return
 
-      const response = await fetch('/games')
-      const data = await response.json()
+    const game = data.find(g => g.id === requestedID)
 
-      const gameContent = document.getElementById('game-content')
+    if (game) {
+      document.getElementById('image').src = game.image
+      document.getElementById('name').textContent = game.gameName
+      document.getElementById('gameDescription').textContent = game.gameDescription
+      document.getElementById('genre').textContent = 'Genre: ' + game.genre
+      document.getElementById('subGenre').textContent = 'Sub-Genre: ' + game.subGenre
+      document.getElementById('serverSize').textContent = 'Server Size: ' + game.serverSize
+      document.getElementById('created').textContent = 'Created: ' + game.created
+      document.getElementById('visits').textContent = 'Visits: ' + game.visits
+      document.title = `Roblox - ${game.gameName}`
+    } else {
+      gameContent.innerHTML = `<h2>No Games Available 😞</h2>`
+    }
+  }
 
-      let game 
-      
-      game = data.find(game => game.id === requestedID)
+  // =========================
+  // PAGE TYPE CHECK
+  // =========================
+  if (!isNaN(parseInt(lastSegment))) {
+    renderGame()
+  } else {
+    renderGames()
 
-      if (game) {
-            document.getElementById('image').src = game.image
-            document.getElementById('name').textContent = game.gameName
-            document.getElementById('gameDescription').textContent = game.gameDescription
-            document.getElementById('genre').textContent = 'Genre: ' + game.genre
-            document.getElementById('subGenre').textContent = 'Sub-Genre: ' + game.subGenre
-            document.getElementById('serverSize').textContent = 'Server Size: ' + game.serverSize
-            document.getElementById('created').textContent = 'Created: ' + game.created
-            document.getElementById('visits').textContent = 'Visits: ' + game.visits
-            document.title = `Roblox - ${game.gameName}` 
-      } else {
-            const message = document.createElement('h2')
-            message.textContent = 'No Games Available 😞'
-            gameContent.appendChild(message) 
-      }
+    // SEARCH LISTENER
+    const form = document.getElementById('search-form')
 
-}
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const input = document.getElementById('search-input').value.trim()
+        renderGames(input)
+      })
+    }
+  }
 
-const path = window.location.pathname
-const lastSegment = path.split('/').pop()
-
-if (!isNaN(parseInt(lastSegment))) {
-      renderGame()
-} else {
-      renderGames()
-}
+})
