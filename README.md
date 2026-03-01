@@ -16,7 +16,6 @@ The following **required** functionality is completed:
   - [X] **NOTE: Your walkthrough added to the README must include a view of your Render dashboard demonstrating that your Postgres database is available**
   - [X]  **NOTE: Your walkthrough added to the README must include a demonstration of your table contents. Use the psql command 'SELECT * FROM tablename;' to display your table contents.**
 
-
 The following **optional** features are implemented:
 
 - [X] The user can search for items by a specific attribute
